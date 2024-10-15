@@ -19,7 +19,7 @@ jobs:
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
       with:
-        platforms: all  # 支持所有平台
+        platforms: all
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -30,11 +30,11 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
-        push: false  # 不推送镜像到 Docker Hub
-        platforms: linux/amd64,linux/arm64  # 指定要构建的平台
+        push: false
+        platforms: linux/amd64,linux/arm64
         tags: |
           ${{ inputs.image_name }}:latest
-          ${{ inputs.image_name }}:${{ github.sha }}  # 使用 Git SHA 作为标签
+          ${{ inputs.image_name }}:${{ github.sha }}
 
     - name: Save amd64 Docker image to a tar file
       run: |
@@ -54,14 +54,14 @@ jobs:
       with:
         name: x86-64-images
         path: x86-64-images.tar.gz
-        retention-days: 2  # 将保留天数设置为 1 天 最多可设置90天
+        retention-days: 2
 
     - name: Upload the arm64 archived Docker images as artifacts
       uses: actions/upload-artifact@v3
       with:
         name: arm64-images
         path: arm64-images.tar.gz
-        retention-days: 2  # 将保留天数设置为 1 天 最多可设置90天
+        retention-days: 2
 
     - name: Clean up intermediate files
       run: |
