@@ -38,11 +38,11 @@ jobs:
 
     - name: Save amd64 Docker image to a tar file
       run: |
-        docker save -o ${{ inputs.image_name }}-amd64.tar ${{ inputs.image_name }}:latest --platform linux/amd64
+        docker buildx build --platform linux/amd64 --output type=tar,dest=${{ inputs.image_name }}-amd64.tar .
 
     - name: Save arm64 Docker image to a tar file
       run: |
-        docker save -o ${{ inputs.image_name }}-arm64.tar ${{ inputs.image_name }}:latest --platform linux/arm64
+        docker buildx build --platform linux/arm64 --output type=tar,dest=${{ inputs.image_name }}-arm64.tar .
 
     - name: Archive the Docker image tar files
       run: |
