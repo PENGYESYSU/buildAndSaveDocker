@@ -71,15 +71,21 @@ RUN apt-get install -y --no-install-recommends \
     ln -s /usr/bin/python3 python &&\
     ln -s /usr/bin/pip3 pip;
 
+# 升级 Cmake（可选）
+RUN cd /tmp && \
+    wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4-Linux-x86_64.sh && \
+    chmod +x cmake-3.14.4-Linux-x86_64.sh && \
+    ./cmake-3.14.4-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir --skip-license && \
+    rm ./cmake-3.14.4-Linux-x86_64.sh
+
 # 安装 TensorRT
 # https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.1/local_repos/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.1.5-ga-20220604_1-1_arm64.deb
 # https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.2/local_repos/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.2.4-ga-20220720_1-1_arm64.deb
 # https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.3/local_repos/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.3.1-ga-20220813_1-1_arm64.deb
 # https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.0/local_repos/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.0.6-ea-20220212_1-1_arm64.deb
 # RUN cd /tmp &&\
-RUN wget –no-check-certificate -v -O /tmp/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.1.5-ga-20220604_1-1_arm64.deb https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.1/local_repos/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.1.5-ga-20220604_1-1_arm64.deb
-RUN cd /tmp &&\
-    dpkg -i nv-tensorrt-repo*.deb && apt-get update
+RUN wget –no-check-certificate https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.1/local_repos/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.1.5-ga-20220604_1-1_arm64.deb
+RUN dpkg -i nv-tensorrt-repo*.deb && apt-get update
 RUN v="${TRT_VERSION%.*}-1+cuda${CUDA_VERSION%.*}" &&\
     apt-get install -y libnvinfer7=${v} libnvinfer-plugin7=${v} libnvparsers7=${v} libnvonnxparsers7=${v} libnvinfer-dev=${v} libnvinfer-plugin-dev=${v} libnvparsers-dev=${v} python3-libnvinfer=${v} &&\
     apt-mark hold libnvinfer7 libnvinfer-plugin7 libnvparsers7 libnvonnxparsers7 libnvinfer-dev libnvinfer-plugin-dev libnvparsers-dev python3-libnvinfer
@@ -89,12 +95,6 @@ RUN python3 -m pip install -i https://pypi.douban.com/simple/ --upgrade pip
 RUN pip3 config set global.index-url https://pypi.douban.com/simple/
 RUN pip3 install setuptools>=41.0.0
 
-# 升级 Cmake（可选）
-RUN cd /tmp && \
-    wget https://github.com/Kitware/CMake/releases/download/v3.14.4/cmake-3.14.4-Linux-x86_64.sh && \
-    chmod +x cmake-3.14.4-Linux-x86_64.sh && \
-    ./cmake-3.14.4-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir --skip-license && \
-    rm ./cmake-3.14.4-Linux-x86_64.sh
 
 # 设置环境变量和工作路径
 ENV TRT_LIBPATH /usr/lib/x86_64-linux-gnu
