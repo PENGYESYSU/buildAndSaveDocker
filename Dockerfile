@@ -33,10 +33,10 @@ RUN apt-get update && \
     # 打印内核版本等信息
     uname -a
     
-# 将 apt 的升级源切换成 阿里云
-RUN  sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list && \
-            apt-get clean && \
-            rm /etc/apt/sources.list.d/*
+# # 将 apt 的升级源切换成 阿里云
+# RUN  sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list && \
+#             apt-get clean && \
+#             rm /etc/apt/sources.list.d/*
 
 # 安装必要的库
 RUN apt-get update && apt-get install -y software-properties-common
@@ -77,7 +77,7 @@ RUN apt-get install -y --no-install-recommends \
 # https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.3/local_repos/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.3.1-ga-20220813_1-1_arm64.deb
 # https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.0/local_repos/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.0.6-ea-20220212_1-1_arm64.deb
 RUN cd /tmp &&\
-    wget –no-check-certificate -v -O /tmp/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.1.5-ga-20220604_1-1_arm64.deb https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.1/local_repos/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.1.5-ga-20220604_1-1_arm64.deb &&\
+RUN wget –no-check-certificate -v -O /tmp/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.1.5-ga-20220604_1-1_arm64.deb https://developer.nvidia.com/compute/machine-learning/tensorrt/secure/8.4.1/local_repos/nv-tensorrt-repo-ubuntu2004-cuda11.6-trt8.4.1.5-ga-20220604_1-1_arm64.deb &&\
     du -sh *.deb
 RUN cd /tmp &&\
     dpkg -i nv-tensorrt-repo*.deb && apt-get update
