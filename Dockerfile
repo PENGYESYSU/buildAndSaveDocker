@@ -26,7 +26,13 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV TRT_VERSION 8.4.1.5
 SHELL ["/bin/bash", "-c"]
 
-
+RUN apt-get update && \
+    apt-get install -y lsb-release && \
+    # 打印系统版本信息
+    lsb_release -a && \
+    # 打印内核版本等信息
+    uname -a
+    
 # 将 apt 的升级源切换成 阿里云
 RUN  sed -i s@/archive.ubuntu.com/@/mirrors.aliyun.com/@g /etc/apt/sources.list && \
             apt-get clean && \
