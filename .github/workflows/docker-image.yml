@@ -42,7 +42,7 @@ jobs:
 
     - name: Save arm64 Docker image to a tar file
       run: |
-        docker buildx build --platform linux/arm64 --output type=tar,dest=${{ inputs.image_name }}-arm64.tar .
+        docker buildx build --no-cache --platform linux/arm64 --output type=tar,dest=${{ inputs.image_name }}-arm64.tar .
 
     - name: Archive the Docker image tar files
       run: |
