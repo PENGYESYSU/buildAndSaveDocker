@@ -20,6 +20,7 @@ ARG OS_VERSION=20.04
 
 FROM nvidia/cuda:${CUDA_VERSION}-cudnn${CUDNN_VERSION}-devel-ubuntu${OS_VERSION}
 LABEL maintainer="yepeng"
+ARG DEBIAN_FRONTEND=noninteractive
 
 # ENV TRT_VERSION 7.2.3.4
 ENV TRT_VERSION 8.4.1.5
