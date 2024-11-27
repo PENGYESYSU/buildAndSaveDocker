@@ -31,37 +31,37 @@ jobs:
         context: .
         file: ./Dockerfile
         push: false
-        platforms: linux/arm64
+        platforms: linux/amd64
         tags: |
           ${{ inputs.image_name }}:latest
           ${{ inputs.image_name }}:${{ github.sha }}
 
-    # - name: Save amd64 Docker image to a tar file
-    #   run: |
-    #     docker buildx build --platform linux/amd64 --output type=tar,dest=${{ inputs.image_name }}-amd64.tar .
-
-    - name: Save arm64 Docker image to a tar file
+    - name: Save amd64 Docker image to a tar file
       run: |
-        docker buildx build --no-cache --platform linux/arm64 --output type=tar,dest=${{ inputs.image_name }}-arm64.tar .
+        docker buildx build --platform linux/amd64 --output type=tar,dest=${{ inputs.image_name }}-amd64.tar .
+
+    # - name: Save arm64 Docker image to a tar file
+    #   run: |
+    #     docker buildx build --no-cache --platform linux/arm64 --output type=tar,dest=${{ inputs.image_name }}-arm64.tar .
 
     - name: Archive the Docker image tar files
       run: |
-        # tar -czf x86-64-images.tar.gz ${{ inputs.image_name }}-amd64.tar
-        tar -czf arm64-images.tar.gz ${{ inputs.image_name }}-arm64.tar
+        tar -czf x86-64-images.tar.gz ${{ inputs.image_name }}-amd64.tar
+        # tar -czf arm64-images.tar.gz ${{ inputs.image_name }}-arm64.tar
 
-    # - name: Upload the archived Docker images as artifacts
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: x86-64-images
-    #     path: x86-64-images.tar.gz
-    #     retention-days: 2
-
-    - name: Upload the arm64 archived Docker images as artifacts
+    - name: Upload the archived Docker images as artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: arm64-images
-        path: arm64-images.tar.gz
+        name: x86-64-images
+        path: x86-64-images.tar.gz
         retention-days: 2
+
+    # - name: Upload the arm64 archived Docker images as artifacts
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: arm64-images
+    #     path: arm64-images.tar.gz
+    #     retention-days: 2
 
     - name: Clean up intermediate files
       run: |
