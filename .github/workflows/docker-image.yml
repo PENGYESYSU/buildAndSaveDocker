@@ -24,39 +24,44 @@ jobs:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Build multi-architecture Docker images
-      id: docker_build
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: ./Dockerfile
-        push: false
-        platforms: linux/amd64
-        tags: |
-          ${{ inputs.image_name }}:latest
+    # - name: Build multi-architecture Docker images
+    #   id: docker_build
+    #   uses: docker/build-push-action@v4
+    #   with:
+    #     context: .
+    #     file: ./Dockerfile
+    #     push: false
+    #     platforms: linux/amd64
+    #     tags: |
+    #       ${{ inputs.image_name }}:latest
 
+    - name: build amd64 Docker container
+      run: |
+        # docker buildx build --platform linux/amd64 --output type=tar,dest=${{ inputs.image_name }}-amd64.tar .
+        docker buildx build --platform=linux/amd64 -t amd64 -o type=image .
+    
     - name: Save amd64 Docker image to a tar file
       run: |
-          docker save ${{ inputs.image_name }}:latest -o ${{ inputs.image_name }}-amd64.tar
+          docker images
+          docker image save -o x86-64-images.tar amd64
+          
         
-    # - name: Save amd64 Docker image to a tar file
-    #   run: |
-    #     docker buildx build --platform linux/amd64 --output type=tar,dest=${{ inputs.image_name }}-amd64.tar .
+
 
     # - name: Save arm64 Docker image to a tar file
     #   run: |
     #     docker buildx build --no-cache --platform linux/arm64 --output type=tar,dest=${{ inputs.image_name }}-arm64.tar .
 
-    - name: Archive the Docker image tar files
-      run: |
-        tar -czf x86-64-images.tar.gz ${{ inputs.image_name }}-amd64.tar
-        # tar -czf arm64-images.tar.gz ${{ inputs.image_name }}-arm64.tar
+    # - name: Archive the Docker image tar files
+    #   run: |
+    #     tar -czf x86-64-images.tar.gz x86-64-images.tar
+    #     # tar -czf arm64-images.tar.gz ${{ inputs.image_name }}-arm64.tar
 
     - name: Upload the archived Docker images as artifacts
       uses: actions/upload-artifact@v4
       with:
         name: x86-64-images
-        path: x86-64-images.tar.gz
+        path: x86-64-images.tar
         retention-days: 2
 
     # - name: Upload the arm64 archived Docker images as artifacts
