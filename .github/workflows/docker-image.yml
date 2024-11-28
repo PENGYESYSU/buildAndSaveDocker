@@ -37,7 +37,7 @@ jobs:
 
     - name: Save amd64 Docker image to a tar file
       run: |
-          docker save "${{ inputs.image_name }}:latest" -o "${{ inputs.image_name }}-amd64.tar"
+          docker save ${{ inputs.image_name }}:latest -o ${{ inputs.image_name }}-amd64.tar
         
     # - name: Save amd64 Docker image to a tar file
     #   run: |
