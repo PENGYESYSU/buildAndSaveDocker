@@ -8,33 +8,115 @@ on:
         required: true
         default: 'your-image-name'
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+#     steps:
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
       
-    - name: Build Docker image
-      run: |
-        docker build -t kalibr:amd64 .
+#     - name: Build Docker image
+#       run: |
+#         docker build -t kalibr:amd64 .
 
-    - name: Save amd64 Docker image to a tar file
-      run: |
-          docker images
-          docker image save -o x86-64-images.tar kalibr:amd64
+#     - name: Save amd64 Docker image to a tar file
+#       run: |
+#           docker images
+#           docker image save -o x86-64-images.tar kalibr:amd64
 
-    - name: Upload the archived Docker images as artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: x86-64-images
-        path: x86-64-images.tar
-        retention-days: 2
+#     - name: Upload the archived Docker images as artifacts
+#       uses: actions/upload-artifact@v4
+#       with:
+#         name: x86-64-images
+#         path: x86-64-images.tar
+#         retention-days: 2
 
-    - name: Clean up intermediate files
-      run: |
-        rm *.tar
+#     - name: Clean up intermediate files
+#       run: |
+#         rm *.tar
+
+
+
+
+# name: ci
+
+# on:
+#   push:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v4
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: kalibr:2004
+
+
+
+
+
+
+# name: ci
+
+# on:
+#   push:
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+#     steps:
+#        -
+#         name: Checkout
+#         uses: actions/checkout@v2
+#       -
+#         name: Set up QEMU
+#         uses: docker/setup-qemu-action@v1
+#       -
+#         name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v1
+#       -
+#         name: Build Docker image
+#         uses: docker/build-push-action@v2
+#         with:
+#           context: .
+#           file: ./Dockerfile
+#           platforms: linux/386,linux/amd64,linux/arm/v6,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x
+#           tags: docker.io/name/app:latest
+#           outputs: type=oci,dest=/tmp/image.tar
+#       -
+#         name: Upload artifact
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: app
+#           path: /tmp/image.tar
+
+
+
+
+
+
+
+
 
     
     # - name: Set up QEMU
